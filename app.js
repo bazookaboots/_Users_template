@@ -2,23 +2,39 @@ const express = require('express')
 const app = express()
 const bcrypt = require('bcrypt')
 const passport = require('passport')
+const flash = require('express-flash')
+const session = require('express-session')
 
 const initializePassport = require('./passport-config')
-initializePassport(passport)
+initializePassport(
+    passport,
+    email=> users.find(user => user.email === email)
+)
 
 app.use(express.json())
 
 const users = []
 
+app.use(flash())
+app.use(session({
+    secret: process.env.SESSION_SECERT,
+    resave: false,
+    saveUninitialized:false
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+
 app.get('/users', (req,res) => {
     res.json(users)
 })
-app.get('/app1', (req,res) => {
-    res.render('./app1/dist/app1/index.html')
-})
-app.get('/app2', (req,res) => {
-    res.render('./app2/dist/app2/index.html')
-})
+
+app.post('/users/login', passport.authenticate('local', {
+    successRedirect: '/users',
+    failureRedirect: '/users/login',
+    failureFlash: true
+}))
 
 app.post('/users/register', async (req,res) => {
     try {
