@@ -19,6 +19,8 @@
   "homepage": "https://github.com/bazookaboots/_Users_Template#readme",
   "dependencies": {
     "bcrypt": "^4.0.1",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-flash": "0.0.2",
     "express-session": "^1.17.0",
